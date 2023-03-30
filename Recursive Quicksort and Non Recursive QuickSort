@@ -1,0 +1,87 @@
+#include <iostream>
+#include <chrono>
+#include <cstdlib>
+#include <stack>
+#include <ctime>
+
+using namespace std;
+
+void swap(int* a, int* b) {
+    int t = *a;
+    *a = *b;
+    *b = t;
+}
+
+int partition(int arr[], int low, int high) {
+    int pivot = arr[high];
+    int i = low - 1;
+    for (int j = low; j < high; j++) {
+        if (arr[j] < pivot) {
+            i++;
+            swap(&arr[i], &arr[j]);
+        }
+    }
+    swap(&arr[i + 1], &arr[high]);
+    return i + 1;
+}
+
+void nonRecursiveQuickSort(int arr[], int low, int high) {
+    stack<int> st;
+    st.push(low);
+    st.push(high);
+    while (!st.empty()) {
+        high = st.top();
+        st.pop();
+        low = st.top();
+        st.pop();
+        int pi = partition(arr, low, high);
+        if (pi - 1 > low) {
+            st.push(low);
+            st.push(pi - 1);
+        }
+        if (pi + 1 < high) {
+            st.push(pi + 1);
+            st.push(high);
+        }
+    }
+}
+
+
+void recursiveQuickSort(int arr[], int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high);
+        recursiveQuickSort(arr, low, pi - 1);
+        recursiveQuickSort(arr, pi + 1, high);
+    }
+}
+
+
+
+
+
+int main() 
+{
+    int size;
+    cout << "total elements in array:";
+    cin >> size;
+
+    int arr[size];
+    srand(time(NULL));
+    for (int i = 0; i < size; i++) {
+        arr[i] = rand();
+    }
+
+    auto startTimeForRecurcive = chrono::high_resolution_clock::now();
+    recursiveQuickSort(arr, 0, size - 1);
+    auto endTimeForRecurcive = chrono::high_resolution_clock::now();
+    auto durationForRecurcive = chrono::duration_cast<chrono::nanoseconds>(endTimeForRecurcive - startTimeForRecurcive).count();
+
+    auto startTimeForIterative = chrono::high_resolution_clock::now();
+    nonRecursiveQuickSort(arr,0,size-1);
+    auto endTimeForIterative = chrono::high_resolution_clock::now();
+    auto durationForNonRecursive = chrono::duration_cast<chrono::nanoseconds>(endTimeForIterative - startTimeForIterative).count();
+    
+    cout << "time taken for recurcive quick sort is " << durationForRecurcive/1000 << endl;
+    cout << "time taken for non recursive quick sort is " << durationForNonRecursive/1000 << endl;
+    return 0;
+}
