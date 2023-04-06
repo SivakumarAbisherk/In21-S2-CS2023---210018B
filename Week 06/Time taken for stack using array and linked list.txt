@@ -1,0 +1,178 @@
+#include <iostream>
+#include <chrono>
+using namespace std;
+
+const int maxSize = 100;
+
+class Stackusingarray {
+private:
+    int top;
+    int arr[maxSize];
+public:
+    Stackusingarray() {
+        top = -1;
+    }
+
+    bool isEmpty() {
+        return top == -1;
+    }
+
+    bool isFull() {
+        return top == maxSize - 1;
+    }
+
+    void Push(int value) {
+        if (isFull()) {
+            cout << "Stack is Overflow\n";
+            return;
+        }
+        top++;
+        arr[top] = value;
+    }
+
+    void Pop() {
+        if (isEmpty()) {
+            cout << "Stack is underflow\n";
+            return;
+        }
+        top--;
+    }
+
+    int StackTop() {
+        if (isEmpty()) {
+            cout << "Stack is empty\n";
+            return -1;
+        }
+        return arr[top];
+    }
+
+    void Display() {
+        if (isEmpty()) {
+            cout << "Stack is empty\n";
+            return;
+        }
+        for (int i = top; i >= 0; i--)
+            cout << arr[i] << " ";
+        cout << endl;
+    }
+};
+
+class Node {
+public:
+    int val;
+    Node* next;
+
+    Node(int v) {
+        val = v;
+        next = nullptr;
+    }
+};
+
+class Stackusinglinkedlist {
+private:
+    Node* top;
+
+public:
+    Stackusinglinkedlist() {
+        top = nullptr;
+    }
+
+    void Push(int val) {
+        Node* newNode = new Node(val);
+        newNode->next = top;
+        top = newNode;
+    }
+
+    void Pop() {
+        if (top == nullptr) {
+            cout << "Stack Underflow!" << endl;
+            return;
+        }
+        Node* temp = top;
+        top = top->next;
+        delete temp;
+    }
+
+    int StackTop() {
+        if (top == nullptr) {
+            cout << "Stack is empty!" << endl;
+            return -1;
+        }
+        return top->val;
+    }
+
+    bool isEmpty() {
+        return (top == nullptr);
+    }
+
+    void Display(){
+        if(this->isEmpty()){
+            cout<<"Stack is empty.\n";
+        }
+        Node* currNode = top;
+        while (currNode != nullptr){
+            cout<<currNode->val<<" ";
+            currNode = currNode->next;
+        }
+        cout<<endl;
+    }
+};
+
+int main() {
+    Stackusingarray s1;
+    auto start_time1 = chrono::high_resolution_clock::now();
+    s1.Push(8);
+    s1.Push(10);
+    s1.Push(5);
+    s1.Push(11);
+    s1.Push(15);
+    s1.Push(23);
+    s1.Push(6);
+    s1.Push(18);
+    s1.Push(20);
+    s1.Push(17);
+    s1.Display();
+    s1.Pop();
+    s1.Pop();
+    s1.Pop();
+    s1.Pop();
+    s1.Pop();
+    s1.Display();
+    s1.Push(4);
+    s1.Push(30);
+    s1.Push(3);
+    s1.Push(1);
+    s1.Display();
+    auto end_time1 = chrono::high_resolution_clock::now();
+    auto duration1 = chrono::duration_cast<std::chrono::microseconds>(end_time1 - start_time1).count();
+    cout << "Time taken for stack implemented using array: " << duration1 << " microseconds" << std::endl;
+
+    Stackusinglinkedlist s2;
+    auto start_time2 = chrono::high_resolution_clock::now();
+    s2.Push(8);
+    s2.Push(10);
+    s2.Push(5);
+    s2.Push(11);
+    s2.Push(15);
+    s2.Push(23);
+    s2.Push(6);
+    s2.Push(18);
+    s2.Push(20);
+    s2.Push(17);
+    s2.Display();
+    s2.Pop();
+    s2.Pop();
+    s2.Pop();
+    s2.Pop();
+    s2.Pop();
+    s2.Display();
+    s2.Push(4);
+    s2.Push(30);
+    s2.Push(3);
+    s2.Push(1);
+    s2.Display();
+    auto end_time2 = chrono::high_resolution_clock::now();
+    auto duration2 = chrono::duration_cast<std::chrono::microseconds>(end_time2 - start_time2).count();
+    cout << "Time taken for stack implemented using array: " << duration2 << " microseconds" << std::endl;
+    return 0;
+}
